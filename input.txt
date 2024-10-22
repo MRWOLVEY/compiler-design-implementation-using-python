@@ -1,13 +1,11 @@
->5;+72;
->1;+101;
->1;+108;
->1;+108;
->1;+111;
->1;+44;
->1;+32;
->1;+87;
->1;+111;
->1;+114;
->1;+108;
->1;+100;
->1;+33;
+// _ for loop, pointer is at an adress, that adress is set to the loop length say 3:-
+// first, the control pointer cP is shifted the location of the pointer to save the loop count
+// _ then i specify how much the pointer should move before excuting the loop, and then i specify the loop logic
+// i.e. _>1:!:>1:+acc , a program that calculates the sum of 3 consecutive adressses, instructions are separated by :
+// the 
+
+// ! for assigning the value into the accumulator:-
+// !+10 for increamenting acc by 10 , and !- is for decrement
+// ! alone is for increamenting the acc by the value of the current address (array[p])
+// !@ is for assigning the value of the current address (array[p]) to the acc as it is
+
