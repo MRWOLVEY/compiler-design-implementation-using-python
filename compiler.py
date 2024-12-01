@@ -2,7 +2,7 @@
 program=open("input.txt","r")
 queue=[]
 for line in program:
-    if "//" in line[:10]: #to remove the comments
+    if "=" in line[:10]: #to remove the comments
         continue
     tt=line.split(";") # ; marks code end
     queue.extend(tt)
@@ -26,9 +26,15 @@ for s in queue:
     elif s[0]=="<":
         p-=int(s[1:])
     elif s[0]=="+":
-        array[p]+=int(s[1:])
+        if s[1:]!="":
+            array[p]+=int(s[1:])
+        else:
+            array[p]+=acc
     elif s[0]=="-":
-        array[p]-=int(s[1:])
+        if s[1:]!="":
+            array[p]-=int(s[1:])
+        else:
+            array[p]-=acc
     elif s[0]=="!": # assigning a value to the accumulator
         if s[2]=="+":
             acc+=int(s[2:])
@@ -63,6 +69,6 @@ for s in queue:
 
 
 print("array:",array)
-for s in array:
-    if s>=32 and s<=126:
-        print(chr(s),end="")
+# for s in array:
+#     if s>=32 and s<=126:
+#         print(chr(s),end="")
