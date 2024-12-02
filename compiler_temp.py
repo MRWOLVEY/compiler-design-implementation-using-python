@@ -6,7 +6,7 @@ class Lexical_Error(Exception):
 
 class preProcessor:
     def __init__(self):#open the file
-        self.file=open("input.txt","r")
+        self.file=open("input.cai","r")
         self.program=self.file.read()
         self.file.close()
     def removeComments(self,program):#remove comments
@@ -148,6 +148,44 @@ class Parser:
                 tree.add_child(self.build_tree(token))
         return tree
 
+class CodeGenerator:
+    def __init__(self,parse_trees):
+        self.parse_trees=parse_trees
+        self.funcitons=[]
+    def generate(self,parse_trees):
+        functions=[]
+        for tree in parse_trees:
+            if tree.value=='ptr_mv_right':
+                steps=int(tree.children[1].value)
+                functions.append([tree.value,(steps)])
+            elif tree.value=='ptr_mv_left':
+                steps=int(tree.children[1].value)
+                functions.append([tree.value,(steps)])
+            elif tree.value=='add_num_val':
+                value=int(tree.children[1].value)
+                functions.append([tree.value,(value)])
+            elif tree.value=='add_acc':
+                functions.append([tree.value])
+            elif tree.value=='sub_num_val':
+                value=int(tree.children[1].value)
+                functions.append([tree.value,(value)])
+            elif tree.value=='sub_acc':
+                functions.append([tree.value])
+            elif tree.value=='inc_acc':
+                value=int(tree.children[2].value)
+                functions.append([tree.value,(value)])
+            elif tree.value=='dec_acc':
+                value=int(tree.children[2].value)
+                functions.append([tree.value,(value)])
+            elif tree.value=='ass_adds_acc':
+                functions.append([tree.value])
+            elif tree.value=='add_adds_acc':
+                functions.append([tree.value])
+            elif tree.value=='loop_seq':
+                fns=self.generate(tree.children[1:])
+                functions.append([tree.value,fns])
+        return functions
+
 
 
 pp=preProcessor()
@@ -157,18 +195,21 @@ print("lexical units:",nn)
 tokens=Lexer(nn,Grammar).tokenize()
 print("tokens:",tokens)
 p=Parser(tokens,Grammar)
-p.parse()
+parse_trees=p.parse()
+fns=CodeGenerator(parse_trees).generate(parse_trees)
+print("functions:",fns)
+
 # print("parse trees:",p.parse_trees[0].children)
-for tree in p.parse_trees:
-    print(tree.value,)
-    for child in tree.children:
-        print(child.value,end=",")
-        if child.children:
-            print()
-            for child2 in child.children:
-                print(child2.value,end=",")
-                print()
-    print()
+# for tree in p.parse_trees:
+#     print(tree.value,)
+#     for child in tree.children:
+#         print(child.value,end=",")
+#         if child.children:
+#             print()
+#             for child2 in child.children:
+#                 print(child2.value,end=",")
+#             print()
+#     print()
 
 
 

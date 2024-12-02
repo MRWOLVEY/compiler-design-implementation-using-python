@@ -135,19 +135,3 @@ class Parser:
             pass
         return tree
 
-
-
-pp=preProcessor()
-tt=pp.removeComments(pp.program)
-nn=pp.removeEmptyLinesAndSpaces(tt)
-print("lexical units:",nn)
-tokens=Lexer(nn,Grammar).tokenize()
-print("tokens:",tokens)
-p=Parser(tokens)
-p.parse()
-# print("parse trees:",p.parse_trees[0].children)
-for tree in p.parse_trees:
-    print(tree.value,)
-    for child in tree.children:
-        print(child.value,end=",")
-    print()
