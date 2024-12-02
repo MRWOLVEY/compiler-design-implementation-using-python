@@ -3,9 +3,10 @@ import re
 class Lexical_Error(Exception):
     def __init__(self,exp):
         super().__init__(exp)
+
 class preProcessor:
     def __init__(self):#open the file
-        self.file=open("input1.txt","r")
+        self.file=open("input.txt","r")
         self.program=self.file.read()
         self.file.close()
     def removeComments(self,program):#remove comments
@@ -16,6 +17,8 @@ class preProcessor:
         exp=''.join(self.search).split(";")
         exp.pop()#remove the last empty segment due to the last semicolon
         return exp
+
+
 class Rule:
     def __init__(self,label,rule):
         self.label=label
@@ -69,15 +72,15 @@ firstAndFollow={'add_num_val':(r"\+",r"[0-9]+"),
                 'dec_acc':(r"!",r"-"),
                 'ass_adds_acc':(r"!",r"@"),
                 'add_adds_acc':(r"!",None),
-                'loop_seq':(r"_",r""),
                 'ptr_mv_right':(r">",r"[0-9]+"),
                 'ptr_mv_left':(r"<",r"[0-9]+")}
 
 
 class Parser:
-    def __init__(self,tokens):
+    def __init__(self,tokens,grammar):
         self.tokens=tokens
         self.parse_trees=[]
+        self.grammar=grammar
 
     class Node:
         def __init__(self,value):
@@ -88,6 +91,7 @@ class Parser:
     def parse(self):
         for token in self.tokens:
             self.parse_trees.append(self.build_tree(token))
+        return self.parse_trees
             
                 
     def build_tree(self,token):
@@ -132,7 +136,16 @@ class Parser:
             tree=self.Node(token[0])
             tree.add_child(self.Node('!'))
         elif token[0]=='loop_seq':
-            pass
+            tree=self.Node(token[0])
+            tree.add_child(self.Node('_'))
+            segmentns=re.findall(r"(?<=_).+",token[1])[0].split(':')
+            tokens=[]
+            for exp in segmentns:
+                for label,pattern in self.grammar.items():
+                    if re.fullmatch(pattern,exp):
+                        tokens.append((label,exp))
+            for token in tokens:
+                tree.add_child(self.build_tree(token))
         return tree
 
 
@@ -143,11 +156,20 @@ nn=pp.removeEmptyLinesAndSpaces(tt)
 print("lexical units:",nn)
 tokens=Lexer(nn,Grammar).tokenize()
 print("tokens:",tokens)
-p=Parser(tokens)
+p=Parser(tokens,Grammar)
 p.parse()
 # print("parse trees:",p.parse_trees[0].children)
 for tree in p.parse_trees:
     print(tree.value,)
     for child in tree.children:
         print(child.value,end=",")
+        if child.children:
+            print()
+            for child2 in child.children:
+                print(child2.value,end=",")
+                print()
     print()
+
+
+
+    

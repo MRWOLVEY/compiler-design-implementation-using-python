@@ -9,4 +9,21 @@
 = ! alone is for increamenting the acc by the value of the current address (array[p])
 = !@ is for assigning the value of the current address (array[p]) to the acc as it is
 
-= 
+= = for comments
+
+=>5;+72;
+=>1;+101;
+=>1;+108;
+=_>3:+1:!@;
+
+>123;
+<1;
++12;
++;
+-12;
+-;
+!-1;
+!+9;
+!@;
+!;
+_>123:+1:<1:!:!@:+;
