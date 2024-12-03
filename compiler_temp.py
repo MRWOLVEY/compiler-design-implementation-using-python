@@ -17,8 +17,6 @@ class preProcessor:
         exp=''.join(self.search).split(";")
         exp.pop()#remove the last empty segment due to the last semicolon
         return exp
-
-
 class Rule:
     def __init__(self,label,rule):
         self.label=label
@@ -81,7 +79,6 @@ class Parser:
         self.tokens=tokens
         self.parse_trees=[]
         self.grammar=grammar
-
     class Node:
         def __init__(self,value):
             self.value=value
@@ -91,9 +88,7 @@ class Parser:
     def parse(self):
         for token in self.tokens:
             self.parse_trees.append(self.build_tree(token))
-        return self.parse_trees
-            
-                
+        return self.parse_trees 
     def build_tree(self,token):
         tree=None
         if token[0]=='ptr_mv_right':

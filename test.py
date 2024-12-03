@@ -72,6 +72,8 @@
 # res=re.findall(patt,string)
 # print(res[0].split(":"))
 
-
-
-print(())
+l=[[0],[1],2,3]
+a=4
+b=2
+a+=b-a
+print(a)

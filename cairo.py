@@ -157,7 +157,7 @@ class Compiler:
                     fns=self.generate(tree.children[1:])
                     functions.append([tree.value,fns])
             return functions
-    def compile(self,program):
+    def compile(self):
         pp=self.preProcessor()
         proccessed_program=pp.process()
         lexer=self.Lexer(proccessed_program,self.Grammar)
@@ -167,3 +167,57 @@ class Compiler:
         code_generator=self.CodeGenerator()
         functions=code_generator.generate(parse_trees)
         return functions
+
+#setting up the program
+compiler=Compiler()
+fns=compiler.compile()
+print(fns)
+#runtime errors
+class RuntimeError(Exception):
+    def __init__(self,exp):
+        super().__init__(exp)
+#program states
+array=[0]*64
+p=0
+cP=0
+acc=0
+#running the compiled program
+def run(functions):
+    global array,p,cP,acc
+    for fn in functions:
+        if fn[0]=='ptr_mv_right':
+            p+=fn[1]
+            if p>63:
+                raise RuntimeError("Index out of range")
+        elif fn[0]=='ptr_mv_left':
+            p-=fn[1]
+            if p<0:
+                raise RuntimeError("Index out of range")
+        elif fn[0]=='add_num_val':
+            array[p]+=fn[1]
+        elif fn[0]=='add_acc':
+            array[p]+=acc
+        elif fn[0]=='sub_num_val':
+            array[p]-=fn[1]
+        elif fn[0]=='sub_acc':
+            array[p]-=acc
+        elif fn[0]=='inc_acc':
+            acc+=fn[1]
+        elif fn[0]=='dec_acc':
+            acc-=fn[1]
+        elif fn[0]=='ass_adds_acc':
+            acc=array[p]
+        elif fn[0]=='add_adds_acc':
+            acc+=array[p]
+        elif fn[0]=='loop_seq':
+            cP+=p-cP
+            segmentns=fn[1]
+            run(segmentns[:1])
+            loops=int(array[cP])
+            for _ in range(loops):
+                run(segmentns[1:])
+run(fns)
+print(array)
+# for s in array:
+#     if s>=32 and s<=126:
+#         print(chr(s),end="")
